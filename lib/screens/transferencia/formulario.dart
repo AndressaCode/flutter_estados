@@ -52,7 +52,7 @@ class FormularioTransferencia extends StatelessWidget {
   void _criaTransferencia(BuildContext context) {
     final int numeroConta = int.tryParse(_controladorCampoNumeroConta.text);
     final double valor = double.tryParse(_controladorCampoValor.text);
-    final transferenciaValida = _validaTransferencia(numeroConta, valor);
+    final transferenciaValida = _validaTransferencia(context, numeroConta, valor);
 
     if (transferenciaValida) {
       final novaTransferencia = Transferencia(valor, numeroConta);
@@ -61,15 +61,19 @@ class FormularioTransferencia extends StatelessWidget {
     }
   }
 
-  _validaTransferencia(numeroConta, valor) {
+  _validaTransferencia(context, numeroConta, valor) {
     final _camposPreenchidos = numeroConta != null && valor != null;
-
-    return _camposPreenchidos;
+    final _saldoSuficiente = valor <=
+    Provider.of<Saldo>(
+      context, listen: false,
+    ).valor;
+    return _camposPreenchidos && _saldoSuficiente;
   }
 
   _atualizaEstado(context, novaTransferencia, valor) {
     Provider.of<Transferencias>(context, listen: false)
         .adiciona(novaTransferencia);
-    Provider.of<Saldo>(context, listen: false).subtrai(valor);
+    Provider.of<Saldo>(context, listen: false)
+        .subtrai(valor);
   }
 }
