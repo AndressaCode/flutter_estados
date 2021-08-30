@@ -10,9 +10,7 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme
-          .of(context)
-          .accentColor,
+      backgroundColor: Theme.of(context).accentColor,
       body: Padding(
         padding: EdgeInsets.only(top: 30.0),
         child: SingleChildScrollView(
@@ -47,9 +45,7 @@ class Login extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-
                         SizedBox(height: 16.0),
-
                         TextField(
                           decoration: InputDecoration(
                             labelText: 'CPF',
@@ -58,9 +54,7 @@ class Login extends StatelessWidget {
                           maxLength: 11,
                           controller: _cpfController,
                         ),
-
                         SizedBox(height: 20.0),
-
                         TextField(
                           decoration: InputDecoration(
                             labelText: 'Senha',
@@ -69,49 +63,65 @@ class Login extends StatelessWidget {
                           maxLength: 15,
                           controller: _senhaController,
                         ),
-
                         SizedBox(height: 30),
-
                         SizedBox(
-                            width: double.infinity,
-                            child: OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                side: BorderSide(
-                                  width: 2,
-                                  color: Theme
-                                      .of(context)
-                                      .accentColor,
-                                ),
+                          width: double.infinity,
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
                               ),
-                              onPressed: () {
-                                if (_validaCampos()) {
-                                  Navigator.pushAndRemoveUntil(
-                                      context, MaterialPageRoute(
-                                    builder: (context) => Dashboard(),
-                                  ),
-                                          (route) => false
-                                  );
-                                }
-                              },
-                              child: Text('CONTINUAR', style: TextStyle(
+                              side: BorderSide(
+                                width: 2,
                                 color: Theme.of(context).accentColor,
-                              ),),
+                              ),
                             ),
+                            onPressed: () {
+                              if (_validaCampos()) {
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Dashboard(),
+                                    ),
+                                    (route) => false);
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text(
+                                        'ATENÇÃO',
+                                      ),
+                                      content: Text('CPF ou Senha incorretos!'),
+                                      actions: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('Fechar'),
+                                        )
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                            child: Text(
+                              'CONTINUAR',
+                              style: TextStyle(
+                                color: Theme.of(context).accentColor,
+                              ),
+                            ),
+                          ),
                         ),
-
                         SizedBox(height: 16),
-
-                        Text('Esqueci minha senha >',
+                        Text(
+                          'Esqueci minha senha >',
                           style: TextStyle(
                             color: Theme.of(context).accentColor,
                           ),
                         ),
-
                         SizedBox(height: 24),
-
                         OutlinedButton(
                           style: OutlinedButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -122,12 +132,13 @@ class Login extends StatelessWidget {
                               color: Color.fromRGBO(71, 161, 56, 0.2),
                             ),
                           ),
-                            onPressed: () {},
-                            child: Text('Criar uma conta',
-                              style: TextStyle(
-                                color: Theme.of(context).accentColor,
-                              ),
+                          onPressed: () {},
+                          child: Text(
+                            'Criar uma conta',
+                            style: TextStyle(
+                              color: Theme.of(context).accentColor,
                             ),
+                          ),
                         ),
                       ],
                     ),
