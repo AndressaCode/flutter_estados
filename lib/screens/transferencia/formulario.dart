@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_estados/components/editor.dart';
+import 'package:flutter_estados/models/saldo.dart';
 import 'package:flutter_estados/models/transferencia.dart';
+import 'package:flutter_estados/models/transferencias.dart';
+import 'package:provider/provider.dart';
 
 const _tituloAppBar = 'Criando Transferência';
 
@@ -12,16 +15,9 @@ const _dicaCampoNumeroConta = '0000';
 
 const _textoBotaoConfirmar = 'Confirmar';
 
-class FormularioTransferencia extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return FormularioTransferenciaState();
-  }
-}
-
-class FormularioTransferenciaState extends State<FormularioTransferencia> {
+class FormularioTransferencia extends StatelessWidget {
   final TextEditingController _controladorCampoNumeroConta =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _controladorCampoValor = TextEditingController();
 
   @override
@@ -56,9 +52,24 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
   void _criaTransferencia(BuildContext context) {
     final int numeroConta = int.tryParse(_controladorCampoNumeroConta.text);
     final double valor = double.tryParse(_controladorCampoValor.text);
-    if (numeroConta != null && valor != null) {
-      final transferenciaCriada = Transferencia(valor, numeroConta);
-      Navigator.pop(context, transferenciaCriada);
+    final transferenciaValida = _validaTransferencia(numeroConta, valor);
+
+    if (transferenciaValida) {
+      final novaTransferencia = Transferencia(valor, numeroConta);
+      _atualizaEstado(context, novaTransferencia, valor);
+      Navigator.pop(context);
     }
+  }
+
+  _validaTransferencia(numeroConta, valor) {
+    final _camposPreenchidos = numeroConta != null && valor != null;
+
+    return _camposPreenchidos;
+  }
+
+  _atualizaEstado(context, novaTransferencia, valor) {
+    Provider.of<Transferencias>(context, listen: false)
+        .adiciona(novaTransferencia);
+    Provider.of<Saldo>(context, listen: false).subtrai(valor);
   }
 }

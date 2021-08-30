@@ -3,10 +3,20 @@ import 'package:flutter_estados/models/saldo.dart';
 import 'package:flutter_estados/screens/dashboard/dashboard.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(ChangeNotifierProvider(
-  create: (context) => Saldo(0),
-  child: BytebankApp(),
-));
+import 'models/transferencias.dart';
+
+void main() =>
+    runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => Saldo(0),
+        ),
+        ChangeNotifierProvider(
+         create: (context) => Transferencias(),
+        ),
+      ],
+      child: BytebankApp(),
+    ));
 
 class BytebankApp extends StatelessWidget {
   @override

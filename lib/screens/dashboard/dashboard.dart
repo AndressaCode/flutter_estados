@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_estados/models/saldo.dart';
 import 'package:flutter_estados/screens/dashboard/saldo.dart';
 import 'package:flutter_estados/screens/deposito/formulario.dart';
+import 'package:flutter_estados/screens/transferencia/formulario.dart';
 import 'package:provider/provider.dart';
 
 class Dashboard extends StatelessWidget {
@@ -16,16 +17,34 @@ class Dashboard extends StatelessWidget {
             alignment: Alignment.topCenter,
             child: SaldoCard(),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              child: Text('Receber depósito'),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return FormularioDeposito();
-                }));
-              },
-            ),
+          ButtonBar(
+            alignment: MainAxisAlignment.center,
+            children: <Widget>[
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.green),
+                ),
+                child: Text('Receber depósito'),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return FormularioDeposito();
+                  }));
+                },
+              ),
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                  MaterialStateProperty.all<Color>(Colors.green),
+                ),
+                child: Text('Nova transferência'),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return FormularioTransferencia();
+                  }));
+                },
+              ),
+            ],
           ),
         ],
       ),
