@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_estados/models/saldo.dart';
+import 'package:flutter_estados/screens/dashboard/saldo.dart';
 
 class Dashboard extends StatelessWidget{
   Widget build(BuildContext context){
@@ -7,7 +9,11 @@ class Dashboard extends StatelessWidget{
       appBar: AppBar(
         title: Text('Dashboard'),
       ),
-      body: Text('40.00'),
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: SaldoCard(Saldo(10.00)
+        ),
+      ),
     );
   }
 }
