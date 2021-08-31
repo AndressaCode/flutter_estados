@@ -87,4 +87,16 @@ class Cliente extends ChangeNotifier{
 
     notifyListeners();
   }
+
+  // Tela de cadastro
+
+  int _stepAtual = 0;
+
+  int get stepAtual => _stepAtual;
+
+  set stepAtual(int value) {
+    _stepAtual = value;
+
+    notifyListeners();
+  }
 }
