@@ -5,6 +5,7 @@ import 'package:flutter_estados/screens/dashboard/saldo.dart';
 import 'package:flutter_estados/screens/deposito/formulario.dart';
 import 'package:flutter_estados/screens/transferencia/formulario.dart';
 import 'package:flutter_estados/screens/transferencia/lista.dart';
+import 'package:flutter_estados/screens/transferencia/ultimas.dart';
 import 'package:provider/provider.dart';
 
 class Dashboard extends StatelessWidget {
@@ -25,7 +26,7 @@ class Dashboard extends StatelessWidget {
               ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor:
-                  MaterialStateProperty.all<Color>(Colors.green),
+                      MaterialStateProperty.all<Color>(Colors.green),
                 ),
                 child: Text('Receber depósito'),
                 onPressed: () {
@@ -37,7 +38,7 @@ class Dashboard extends StatelessWidget {
               ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor:
-                  MaterialStateProperty.all<Color>(Colors.green),
+                      MaterialStateProperty.all<Color>(Colors.green),
                 ),
                 child: Text('Nova transferência'),
                 onPressed: () {
@@ -48,34 +49,19 @@ class Dashboard extends StatelessWidget {
               ),
             ],
           ),
-          ElevatedButton(
-            style: ButtonStyle(
-              backgroundColor:
-              MaterialStateProperty.all<Color>(Colors.green),
-            ),
-            child: Text('Transferências'),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ListaTransferencias();
-              }));
-            },
-          ),
+          UltimasTransferencias(),
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: ElevatedButton(
               style: ButtonStyle(
-                backgroundColor:
-                MaterialStateProperty.all<Color>(Colors.green),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
               ),
               child: Text('Sair'),
               onPressed: () {
                 Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Login()
-                  ),
-                  (route) => false
-                );
+                    context,
+                    MaterialPageRoute(builder: (context) => Login()),
+                    (route) => false);
               },
             ),
           ),
