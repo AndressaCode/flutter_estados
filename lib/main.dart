@@ -32,7 +32,7 @@ class BytebankApp extends StatelessWidget {
           textTheme: ButtonTextTheme.primary,
         ),
       ),
-      home: Login(),
+      home: Dashboard(),
     );
   }
 }

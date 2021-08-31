@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_estados/models/saldo.dart';
+import 'package:flutter_estados/screens/autenticacao/login.dart';
 import 'package:flutter_estados/screens/dashboard/saldo.dart';
 import 'package:flutter_estados/screens/deposito/formulario.dart';
 import 'package:flutter_estados/screens/transferencia/formulario.dart';
@@ -24,7 +25,7 @@ class Dashboard extends StatelessWidget {
               ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.green),
+                  MaterialStateProperty.all<Color>(Colors.green),
                 ),
                 child: Text('Receber depósito'),
                 onPressed: () {
@@ -58,6 +59,25 @@ class Dashboard extends StatelessWidget {
                 return ListaTransferencias();
               }));
             },
+          ),
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor:
+                MaterialStateProperty.all<Color>(Colors.green),
+              ),
+              child: Text('Sair'),
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Login()
+                  ),
+                  (route) => false
+                );
+              },
+            ),
           ),
         ],
       ),

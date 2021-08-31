@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_estados/components/mensagem.dart';
+import 'package:flutter_estados/screens/autenticacao/registrar.dart';
 import 'package:flutter_estados/screens/dashboard/dashboard.dart';
 
 class Login extends StatelessWidget {
@@ -74,6 +75,8 @@ class Login extends StatelessWidget {
               if (value.length == 0) return "Informe o CPF";
 
               if (value.length < 14) return "CPF inválido!";
+
+              return null;
             },
             keyboardType: TextInputType.number,
             maxLength: 14,
@@ -88,6 +91,7 @@ class Login extends StatelessWidget {
               if (value.length == 0) {
                 return 'Informe sua senha!';
               }
+              return null;
             },
             keyboardType: TextInputType.number,
             maxLength: 15,
@@ -151,7 +155,14 @@ class Login extends StatelessWidget {
                 color: Color.fromRGBO(71, 161, 56, 0.2),
               ),
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Registrar(),
+                ),
+              );
+            },
             child: Text(
               'Criar uma conta',
               style: TextStyle(
