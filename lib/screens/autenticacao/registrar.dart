@@ -22,6 +22,7 @@ class Registrar extends StatelessWidget {
   final TextEditingController _cidadeController = TextEditingController();
   final TextEditingController _bairroController = TextEditingController();
   final TextEditingController _logradouroController = TextEditingController();
+  final TextEditingController _numeroController = TextEditingController();
 
   // step 3
   final _formUserAuth = GlobalKey<FormState>();
@@ -36,21 +37,52 @@ class Registrar extends StatelessWidget {
       ),
       body: Consumer<Cliente>(builder: (context, cliente, child) {
         return Stepper(
-          currentStep: cliente.stepAtual,
-          onStepContinue: () {
-            final functions = [
-              _salvarStep1,
-              _salvarStep2,
-              _salvarStep3,
-            ];
-            return functions[cliente.stepAtual](context);
-          },
-          onStepCancel: () {
-            cliente.stepAtual = cliente.stepAtual > 0 ? cliente.stepAtual - 1 : 0;
-          },
-          steps: _construirSteps(context, cliente),
-          // controlsBuilder: (context, ),
-        );
+            currentStep: cliente.stepAtual,
+            onStepContinue: () {
+              final functions = [
+                _salvarStep1,
+                _salvarStep2,
+                _salvarStep3,
+              ];
+              return functions[cliente.stepAtual](context);
+            },
+            onStepCancel: () {
+              cliente.stepAtual =
+                  cliente.stepAtual > 0 ? cliente.stepAtual - 1 : 0;
+            },
+            steps: _construirSteps(context, cliente),
+            controlsBuilder: (context, {onStepContinue, onStepCancel}) {
+              return Padding(
+                padding: EdgeInsets.only(top: 18.0),
+                child: Row(
+                  children: [
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).accentColor)
+                      ),
+                      onPressed: onStepContinue,
+                      child: Text(
+                        'Salvar',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(right: 18.0),
+                    ),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Colors.black),
+                      ),
+                      onPressed: onStepCancel,
+                      child: Text(
+                        'Voltar',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            });
       }),
     );
   }
@@ -286,7 +318,7 @@ class Registrar extends StatelessWidget {
                 decoration: InputDecoration(
                   labelText: 'Número',
                 ),
-                controller: _celularController,
+                controller: _numeroController,
                 keyboardType: TextInputType.text,
                 maxLength: 255,
               ),
