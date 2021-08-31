@@ -2,6 +2,7 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_estados/components/mensagem.dart';
 import 'package:flutter_estados/screens/dashboard/dashboard.dart';
 
 class Login extends StatelessWidget {
@@ -19,7 +20,6 @@ class Login extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-
               Align(
                 alignment: Alignment.topCenter,
                 child: Image.asset(
@@ -27,9 +27,7 @@ class Login extends StatelessWidget {
                   width: 200,
                 ),
               ),
-
               SizedBox(height: 30),
-
               Align(
                 alignment: Alignment.center,
                 child: Container(
@@ -45,7 +43,6 @@ class Login extends StatelessWidget {
                   ),
                 ),
               ),
-
             ],
           ),
         ),
@@ -53,21 +50,18 @@ class Login extends StatelessWidget {
     );
   }
 
-  Widget _construirFormulario(context){
+  Widget _construirFormulario(context) {
     return Form(
       key: _formKey,
       child: Column(
         children: [
-
           Text(
             'Faça seu login',
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
-
           SizedBox(height: 16.0),
-
           TextFormField(
             decoration: InputDecoration(
               labelText: 'CPF',
@@ -76,27 +70,22 @@ class Login extends StatelessWidget {
               FilteringTextInputFormatter.digitsOnly,
               CpfInputFormatter(),
             ],
-            validator: (value){
-              if(value.length == 0 )
-                return 'Informe o CPF';
+            validator: (value) {
+              if (value.length == 0) return "Informe o CPF";
 
-                if(value.length <14 )
-                  return 'CPF inválido!';
-              
+              if (value.length < 14) return "CPF inválido!";
             },
             keyboardType: TextInputType.number,
             maxLength: 14,
             controller: _cpfController,
           ),
-
           SizedBox(height: 20.0),
-
           TextFormField(
             decoration: InputDecoration(
               labelText: 'Senha',
             ),
-            validator: (value){
-              if(value.length == 0){
+            validator: (value) {
+              if (value.length == 0) {
                 return 'Informe sua senha!';
               }
             },
@@ -104,12 +93,16 @@ class Login extends StatelessWidget {
             maxLength: 15,
             controller: _senhaController,
           ),
-
           SizedBox(height: 30),
-
           SizedBox(
             width: double.infinity,
             child: OutlinedButton(
+              child: Text(
+                'CONTINUAR',
+                style: TextStyle(
+                  color: Theme.of(context).accentColor,
+                ),
+              ),
               style: OutlinedButton.styleFrom(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
@@ -121,38 +114,23 @@ class Login extends StatelessWidget {
               ),
               onPressed: () {
                 if (_formKey.currentState.validate()) {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Dashboard(),
-                    ),
+                  if (_cpfController.text == '111.111.111-11' &&
+                      _senhaController.text == 'abc123') {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Dashboard(),
+                        ),
                         (route) => false);
-                } //else {
-                // showDialog(
-                //   context: context,
-                //   builder: (BuildContext context){
-                //     return AlertDialog(
-                //       title: Text('ATENÇÃO',),
-                //       content: Text('CPF ou Senha incorretos!'),
-                //       actions: [
-                //         ElevatedButton(
-                //           onPressed: () {
-                //             Navigator.pop(context);
-                //           },
-                //           child: Text('Fechar'),
-                //         )
-                //       ],
-                //     );
-                //   },
-                // );
+                  } else {
+                    return exibirAlerta(
+                      context: context,
+                      titulo: 'ATENÇÃO',
+                      content: 'CPF ou senha incorretos!',
+                    );
+                  }
+                }
               },
-              // },
-              child: Text(
-                'CONTINUAR',
-                style: TextStyle(
-                  color: Theme.of(context).accentColor,
-                ),
-              ),
             ),
           ),
           SizedBox(height: 16),
