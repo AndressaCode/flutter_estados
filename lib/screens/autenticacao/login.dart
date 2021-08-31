@@ -163,6 +163,8 @@ class Login extends StatelessWidget {
                 ),
               );
             },
+
+            // Criar uma conta
             child: Text(
               'Criar uma conta',
               style: TextStyle(

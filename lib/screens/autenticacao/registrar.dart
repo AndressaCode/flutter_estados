@@ -2,6 +2,7 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_estados/screens/dashboard/dashboard.dart';
 
 class Registrar extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -15,7 +16,7 @@ class Registrar extends StatelessWidget {
   final TextEditingController _cidadeController = TextEditingController();
   final TextEditingController _bairroController = TextEditingController();
   final TextEditingController _logradouroController = TextEditingController();
-  final TextEditingController _numeroController = TextEditingController();
+  final TextEditingController _mesController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -32,23 +33,29 @@ class Registrar extends StatelessWidget {
                 children: [
                   // Nome
                   TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Nome',
+                    ),
                     controller: _nomeController,
                     keyboardType: TextInputType.text,
                     maxLength: 255,
                     validator: (value) {
-                      if (value.contains(" "))
-                        return 'Informe pelo menos um sobrenome!';
 
                       if (value.length < 3) return 'Nome inválido';
 
+                      // Verifica a não existência de espaço entre duas palavras
+                      // Significa dizer que só existe uma
+                      if (!value.contains(" "))
+                        return 'Informe pelo menos um sobrenome!';
+
                       return null;
                     },
-                    decoration: InputDecoration(
-                      labelText: 'Nome',
-                    ),
                   ),
                   // E-mail
                   TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'E-mail',
+                    ),
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     maxLength: 255,
@@ -60,13 +67,13 @@ class Registrar extends StatelessWidget {
 
                       return null;
                     },
-                    decoration: InputDecoration(
-                      labelText: 'E-mail',
-                    ),
                   ),
 
                   // CPF
                   TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'CPF',
+                    ),
                     controller: _cpfController,
                     keyboardType: TextInputType.number,
                     maxLength: 14,
@@ -79,13 +86,13 @@ class Registrar extends StatelessWidget {
                       FilteringTextInputFormatter.digitsOnly,
                       CpfInputFormatter(),
                     ],
-                    decoration: InputDecoration(
-                      labelText: 'CPF',
-                    ),
                   ),
 
                   // Celular
                   TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Celular',
+                    ),
                     controller: _celularController,
                     keyboardType: TextInputType.number,
                     maxLength: 14,
@@ -98,9 +105,6 @@ class Registrar extends StatelessWidget {
                       FilteringTextInputFormatter.digitsOnly,
                       TelefoneInputFormatter(),
                     ],
-                    decoration: InputDecoration(
-                      labelText: 'Celular',
-                    ),
                   ),
 
                   // Nascimento
@@ -120,6 +124,9 @@ class Registrar extends StatelessWidget {
 
                   // Cep
                   TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'CEP',
+                    ),
                     controller: _cepController,
                     keyboardType: TextInputType.number,
                     maxLength: 10,
@@ -132,107 +139,138 @@ class Registrar extends StatelessWidget {
                       FilteringTextInputFormatter.digitsOnly,
                       CepInputFormatter(),
                     ],
-                    decoration: InputDecoration(
-                      labelText: 'CEP',
-                    ),
                   ),
 
                   // Estado
                   DropdownButtonFormField(
-                      isExpanded: true,
-                      decoration: InputDecoration(
-                          labelText: 'Estado'
-                      ),
-                      items: Estados.listaEstadosSigla.map((String estado) {
-                        return DropdownMenuItem(
-                          child: Text(estado),
-                          value: estado,);
-                      }).toList(),
-                    onChanged: (String novoEstadoSelecionado){
-                        _estadoController.text = novoEstadoSelecionado;
+                    isExpanded: true,
+                    decoration: InputDecoration(labelText: 'Estado'),
+                    items: Estados.listaEstadosSigla.map((String estado) {
+                      return DropdownMenuItem(
+                        child: Text(estado),
+                        value: estado,
+                      );
+                    }).toList(),
+                    onChanged: (String novoEstadoSelecionado) {
+                      _estadoController.text = novoEstadoSelecionado;
                     },
-                    validator: (value){
-
-                        if(value == null)
-                          return 'Selecione um estado!';
-
-                        return null;
-                    },
-                  ),
-
-                  // Cidade
-                  TextFormField(
-                    controller: _celularController,
-                    keyboardType: TextInputType.number,
-                    maxLength: 14,
                     validator: (value) {
-                      if (value.length < 11) return 'Celular inválido!';
+                      if (value == null) return 'Selecione um estado!';
 
                       return null;
                     },
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      TelefoneInputFormatter(),
-                    ],
+                  ),
+
+                  SizedBox(height: 12.0),
+
+                  // Cidade
+                  TextFormField(
                     decoration: InputDecoration(
-                      labelText: 'Celular',
+                      labelText: 'Cidade',
                     ),
+                    controller: _cidadeController,
+                    keyboardType: TextInputType.text,
+                    maxLength: 14,
+                    validator: (value) {
+                      if (value.length < 3) return 'Cidade inválida!';
+
+                      return null;
+                    },
                   ),
 
                   // Bairro
                   TextFormField(
-                    controller: _celularController,
-                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Bairro',
+                    ),
+                    controller: _bairroController,
+                    keyboardType: TextInputType.text,
                     maxLength: 14,
                     validator: (value) {
-                      if (value.length < 11) return 'Celular inválido!';
+                      if (value.length < 3) return 'Bairro inválido!';
 
                       return null;
                     },
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      TelefoneInputFormatter(),
-                    ],
-                    decoration: InputDecoration(
-                      labelText: 'Celular',
-                    ),
                   ),
 
                   // Logradouro
                   TextFormField(
-                    controller: _celularController,
-                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Logradouro',
+                    ),
+                    controller: _logradouroController,
+                    keyboardType: TextInputType.text,
                     maxLength: 14,
                     validator: (value) {
-                      if (value.length < 11) return 'Celular inválido!';
+                      if (value.length < 3) return 'Logradouro inválido!';
 
                       return null;
                     },
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      TelefoneInputFormatter(),
-                    ],
-                    decoration: InputDecoration(
-                      labelText: 'Celular',
-                    ),
                   ),
 
                   // Numero
+                  // Não tem número específico para usar uma mask,
+                  // uma vez que ele pode ser um ap, casa sem número,
+                  // entre outros
                   TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Número',
+                    ),
                     controller: _celularController,
-                    keyboardType: TextInputType.number,
-                    maxLength: 14,
+                    keyboardType: TextInputType.text,
+                    maxLength: 255,
+                  ),
+
+                  // Estado
+                  DropdownButtonFormField(
+                    isExpanded: true,
+                    decoration: InputDecoration(labelText: 'Mês'),
+                    items: Meses.listaMeses.map((String mes) {
+                      return DropdownMenuItem(
+                        child: Text(mes),
+                        value: mes,
+                      );
+                    }).toList(),
+                    onChanged: (String novoMesSelecionado) {
+                      _mesController.text = novoMesSelecionado;
+                    },
                     validator: (value) {
-                      if (value.length < 11) return 'Celular inválido!';
+                      if (value == null) return 'Selecione um mês!';
 
                       return null;
                     },
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      TelefoneInputFormatter(),
-                    ],
-                    decoration: InputDecoration(
-                      labelText: 'Celular',
+                  ),
+                  SizedBox(height: 24),
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      side: BorderSide(
+                        width: 2,
+                        color: Color.fromRGBO(71, 161, 56, 0.2),
+                      ),
+                    ),
+                    onPressed: () {
+                      if (_formKey.currentState.validate()) {
+                        // Retira o histórico, o botão de voltar na appBar
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Dashboard(),
+                          ),
+                          // estamos passando um widget ao invés de uma rota nomeada
+                              (route) => false,
+                        );
+                      }
+                    },
+
+                    // Finalizar cadastro
+                    child: Text(
+                      'Finalizar cadastro',
+                      style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                      ),
                     ),
                   ),
                 ],

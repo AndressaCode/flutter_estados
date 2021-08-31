@@ -4,6 +4,7 @@ import 'package:flutter_estados/screens/autenticacao/login.dart';
 import 'package:flutter_estados/screens/dashboard/dashboard.dart';
 import 'package:provider/provider.dart';
 
+import 'models/cliente.dart';
 import 'models/transferencias.dart';
 
 void main() =>
@@ -14,6 +15,9 @@ void main() =>
         ),
         ChangeNotifierProvider(
          create: (context) => Transferencias(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => Cliente(),
         ),
       ],
       child: BytebankApp(),
