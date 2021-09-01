@@ -111,7 +111,8 @@ class Registrar extends StatelessWidget {
   }
 
   _salvarStep3(context) {
-    if (_formUserAuth.currentState.validate() && Provider.of<Cliente>(context, listen: false).imagemRG != null) {
+    if (_formUserAuth.currentState.validate() &&
+        Provider.of<Cliente>(context, listen: false).imagemRG != null) {
       FocusScope.of(context).unfocus();
       Provider.of<Cliente>(context, listen: false).imagemRG = null;
       Navigator.pushAndRemoveUntil(
@@ -221,20 +222,20 @@ class Registrar extends StatelessWidget {
           child: Column(
             children: [
               // CEP
-              // TextFormField(
-              //   decoration: InputDecoration(
-              //     labelText: 'CEP',
-              //   ),
-              //   controller: _cepController,
-              //   keyboardType: TextInputType.number,
-              //   maxLength: 10,
-              //   // validator: (value) =>
-              //   //     Validator.cep(value) ? 'CEP Inválido!' : null,
-              //   inputFormatters: [
-              //     FilteringTextInputFormatter.digitsOnly,
-              //     CepInputFormatter(),
-              //   ],
-              // ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'CEP',
+                ),
+                controller: _cepController,
+                keyboardType: TextInputType.number,
+                maxLength: 10,
+                // validator: (value) =>
+                //     Validator.cep(value) ? 'CEP Inválido!' : null,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  CepInputFormatter(ponto: false)
+                ],
+              ),
 
               // Estado
               DropdownButtonFormField(
@@ -384,7 +385,9 @@ class Registrar extends StatelessWidget {
                 child: Text('Tirar foto do meu RG'),
               ),
 
-              _jaEnviouRG(context) ? _imagemDoRG(context) : _pedidoDeRG(context),
+              _jaEnviouRG(context)
+                  ? _imagemDoRG(context)
+                  : _pedidoDeRG(context),
 
               Biometria(),
             ],
@@ -437,5 +440,4 @@ class Registrar extends StatelessWidget {
       ],
     );
   }
-
 }
