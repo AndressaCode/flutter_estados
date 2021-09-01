@@ -110,9 +110,9 @@ class Registrar extends StatelessWidget {
   }
 
   _salvarStep3(context) {
-    if (_formUserAuth.currentState.validate() && Provider.of<Cliente>(context).imagemRG != null) {
+    if (_formUserAuth.currentState.validate() && Provider.of<Cliente>(context, listen: false).imagemRG != null) {
       FocusScope.of(context).unfocus();
-      Provider.of<Cliente>(context).imagemRG = null;
+      Provider.of<Cliente>(context, listen: false).imagemRG = null;
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => Dashboard()),
@@ -294,7 +294,7 @@ class Registrar extends StatelessWidget {
                 ),
                 controller: _logradouroController,
                 keyboardType: TextInputType.text,
-                maxLength: 14,
+                maxLength: 20,
                 validator: (value) {
                   if (value.length < 3) return 'Logradouro inválido!';
 
