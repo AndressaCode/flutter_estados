@@ -4,6 +4,7 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_estados/components/biometria.dart';
 import 'package:flutter_estados/models/cliente.dart';
 import 'package:flutter_estados/screens/dashboard/dashboard.dart';
 import 'package:provider/provider.dart';
@@ -384,6 +385,8 @@ class Registrar extends StatelessWidget {
               ),
 
               _jaEnviouRG(context) ? _imagemDoRG(context) : _pedidoDeRG(context),
+
+              Biometria(),
             ],
           ),
         ),
@@ -434,4 +437,5 @@ class Registrar extends StatelessWidget {
       ],
     );
   }
+
 }
