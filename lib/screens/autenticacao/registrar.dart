@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_estados/models/cliente.dart';
 import 'package:flutter_estados/screens/dashboard/dashboard.dart';
 import 'package:provider/provider.dart';
 import 'package:flux_validator_dart/flux_validator_dart.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Registrar extends StatelessWidget {
   // step 1
@@ -29,6 +32,7 @@ class Registrar extends StatelessWidget {
   final _formUserAuth = GlobalKey<FormState>();
   TextEditingController _senhaController = TextEditingController();
   TextEditingController _confirmarSenhaController = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +63,8 @@ class Registrar extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).accentColor)
-                      ),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Theme.of(context).accentColor)),
                       onPressed: onStepContinue,
                       child: Text(
                         'Salvar',
@@ -72,7 +76,8 @@ class Registrar extends StatelessWidget {
                     ),
                     ElevatedButton(
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.black),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.black),
                       ),
                       onPressed: onStepCancel,
                       child: Text(
@@ -105,8 +110,9 @@ class Registrar extends StatelessWidget {
   }
 
   _salvarStep3(context) {
-    if (_formUserAuth.currentState.validate()) {
-      // FocusScope.of(context).unfocus();
+    if (_formUserAuth.currentState.validate() && Provider.of<Cliente>(context).imagemRG != null) {
+      FocusScope.of(context).unfocus();
+      Provider.of<Cliente>(context).imagemRG = null;
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => Dashboard()),
@@ -151,7 +157,8 @@ class Registrar extends StatelessWidget {
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 maxLength: 255,
-                validator: (value) => Validator.email(value) ? 'E-mail Inválido!' : null,
+                validator: (value) =>
+                    Validator.email(value) ? 'E-mail Inválido!' : null,
               ),
 
               // CPF
@@ -162,7 +169,8 @@ class Registrar extends StatelessWidget {
                 controller: _cpfController,
                 keyboardType: TextInputType.number,
                 maxLength: 14,
-                validator: (value) => Validator.cpf(value) ? 'CPF Inválido!' : null,
+                validator: (value) =>
+                    Validator.cpf(value) ? 'CPF Inválido!' : null,
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
                   CpfInputFormatter(),
@@ -176,9 +184,9 @@ class Registrar extends StatelessWidget {
                 ),
                 controller: _celularController,
                 keyboardType: TextInputType.number,
-                maxLength: 14,
-                validator: (value) => Validator.phone(value) ? 'Celular Inválido!' : null,
-
+                maxLength: 15,
+                validator: (value) =>
+                    Validator.phone(value) ? 'Celular Inválido!' : null,
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
                   TelefoneInputFormatter(),
@@ -212,19 +220,20 @@ class Registrar extends StatelessWidget {
           child: Column(
             children: [
               // CEP
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'CEP',
-                ),
-                controller: _cepController,
-                keyboardType: TextInputType.number,
-                maxLength: 10,
-                validator: (value) => Validator.cep(value) ? 'CEP Inválido!' : null,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  CepInputFormatter(),
-                ],
-              ),
+              // TextFormField(
+              //   decoration: InputDecoration(
+              //     labelText: 'CEP',
+              //   ),
+              //   controller: _cepController,
+              //   keyboardType: TextInputType.number,
+              //   maxLength: 10,
+              //   // validator: (value) =>
+              //   //     Validator.cep(value) ? 'CEP Inválido!' : null,
+              //   inputFormatters: [
+              //     FilteringTextInputFormatter.digitsOnly,
+              //     CepInputFormatter(),
+              //   ],
+              // ),
 
               // Estado
               DropdownButtonFormField(
@@ -340,7 +349,7 @@ class Registrar extends StatelessWidget {
               // Confirmar senha
               TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Confirmar senha',
+                  labelText: 'Confirmar',
                 ),
                 controller: _confirmarSenhaController,
                 keyboardType: TextInputType.text,
@@ -357,6 +366,24 @@ class Registrar extends StatelessWidget {
                   CepInputFormatter(),
                 ],
               ),
+
+              SizedBox(height: 16.0),
+
+              Text(
+                'Para prosseguir com o cadastro é necesário que tenha a foto do seu RG',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              SizedBox(height: 16.0),
+
+              ElevatedButton(
+                onPressed: () => _capturarRG(cliente),
+                child: Text('Tirar foto do meu RG'),
+              ),
+
+              _jaEnviouRG(context) ? _imagemDoRG(context) : _pedidoDeRG(context),
             ],
           ),
         ),
@@ -365,12 +392,46 @@ class Registrar extends StatelessWidget {
     return step;
   }
 
-  _proximoStep(context) {
+  void _proximoStep(context) {
     Cliente cliente = Provider.of<Cliente>(context, listen: false);
     irPara(cliente.stepAtual + 1, cliente);
   }
 
-  irPara(int step, cliente) {
+  void irPara(int step, cliente) {
     cliente.stepAtual = step;
+  }
+
+  // A câmera é assincrona, por isso devemos utilizar o await.
+  // Para o await funcionar usamos o async
+
+  void _capturarRG(cliente) async {
+    final pickedImage = await _picker.pickImage(source: ImageSource.camera);
+    cliente.imagemRG = File(pickedImage.path);
+  }
+
+  bool _jaEnviouRG(context) {
+    if (Provider.of<Cliente>(context).imagemRG != null) return true;
+
+    return false;
+  }
+
+  Image _imagemDoRG(context) {
+    return Image.file(Provider.of<Cliente>(context).imagemRG);
+  }
+
+  Column _pedidoDeRG(context) {
+    return Column(
+      children: [
+        SizedBox(height: 16.0),
+        Text(
+          'Foto do RG pendente!',
+          style: TextStyle(
+            color: Colors.red,
+            fontWeight: FontWeight.bold,
+            fontSize: 16.0,
+          ),
+        ),
+      ],
+    );
   }
 }
